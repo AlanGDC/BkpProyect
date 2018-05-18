@@ -1,0 +1,993 @@
+{
+  "collection": {
+    "_": {
+      "postman_id": "a7c59c90-2ba6-70ec-226c-79c2e2b6ad46"
+    },
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    },
+    "item": [
+      {
+        "id": "4cc55bc8-7c68-492c-8855-711d190980a1",
+        "name": "Create Account s/Poliza SF",
+        "request": {
+          "description": {
+            "content": "",
+            "type": "text/plain"
+          },
+          "url": {
+            "path": [
+              "accounts_vehicles"
+            ],
+            "host": [
+              "{{url}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"personalInformation\": {\n    \"name\": \"Juan Martin\",\n    \"surname\": \"Spagnol\",\n    \"document\": \"99{{randomNum2}}{{randomNum}}\",\n    \"birthday\": \"1987-01-01\"\n  },\n  \"contactInformation\": {\n    \"email\": \"TESTAPI{{randomNum}}{{randomNum2}}@fakemail.com\",\n    \"phone\": {\n      \"phoneNumber\": \"1100112233\"\n    },\n    \"address\": {\n      \"streetName\": \"Evergreen\",\n      \"streetNumber\": \"4200\",\n      \"floor\": 0,\n      \"flat\": \"\",\n      \"state\": \"CABA\",\n      \"city\": \"CABA\",\n      \"zipCode\": 1620\n    }\n  },\n  \"vehicleInformation\": {\n    \"carId\": \"320398\",\n    \"licensePlate\": \"A{{randomNum}}{{randomNum2}}\",\n    \"brand\": \"PEUGEOT\",\n    \"model\": \"206\",\n    \"year\": \"2008\",\n    \"version\": \"206 1.6 3 PTAS XS L/04\",\n    \"is0km\": \"false\",\n    \"hasGNC\": \"false\",\n    \"vin\": \"{{randomNum2}}{{randomNum}}{{randomNum2}}{{randomNum}}{{randomNum2}}{{randomNum}}{{randomNum2}}\",\n    \"engineNumber\": \"40000000\"\n  }\n}"
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "d3e82cf4-c4ee-4823-a539-19bfa46620e7",
+              "type": "text/javascript",
+              "exec": [
+                "// Random generator function",
+                "    //Function for random",
+                "        function getRandomInt(min, max) {",
+                "        min = Math.ceil(min);",
+                "        max = Math.floor(max);",
+                "        return Math.floor(Math.random() * (max - min)) + min;",
+                "        }",
+                "        ",
+                "    // Generate the random value",
+                "        var myval = getRandomInt(100,999)",
+                "        ",
+                "    // Set the value into  environment variable",
+                "        pm.environment.set(\"randomNum\",myval)",
+                "    ",
+                "    // Generate the random value",
+                "        var myval = getRandomInt(100,999)",
+                "        ",
+                "    // Set the value into  environment variable",
+                "        pm.environment.set(\"randomNum2\",myval)",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "_lastExecutionId": "36097f2b-f332-40f5-bdac-f4af53f3f733"
+            }
+          },
+          {
+            "listen": "test",
+            "script": {
+              "id": "f8fa4445-4d6b-4a81-8cf4-54a598152e5a",
+              "type": "text/javascript",
+              "exec": [
+                "// Extract Data from Response:",
+                "    ",
+                "    // Set DNI value into  environment variable   ",
+                "        var jsonData = JSON.parse(responseBody);",
+                "        pm.environment.set(\"account_id\", jsonData.account_id);",
+                "    ",
+                "    ",
+                "    // Set Policy ID value into  environment variable   ",
+                "        var jsonData = JSON.parse(responseBody);",
+                "        pm.environment.set(\"vehicle_id\", jsonData.vehicle_id);",
+                "",
+                "",
+                "        "
+              ],
+              "_lastExecutionId": "b30e05fb-6714-4057-a056-6816cad00597"
+            }
+          }
+        ]
+      },
+      {
+        "id": "3e34b936-ab4e-4bb4-a9f3-802527169375",
+        "name": "Create Poliza con Account SF",
+        "request": {
+          "description": {
+            "content": "",
+            "type": "text/plain"
+          },
+          "url": {
+            "path": [
+              "policies"
+            ],
+            "host": [
+              "{{url}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"accountId\":\"{{account_id}}\",\n\n  \"vehicleId\":\"{{vehicle_id}}\",\n\n \"packageId\": \"P1\",\n \"products\": [\n   {\n     \"code\": \"RCC\",\n     \"name\": \"Responsabilidad Civil\",\n     \"description\": \"Cobertura frente a daños físicos y materiales ocasionados a otras personas en un accidente de tránsito\",\n     \"category\": \"COVERAGE\",\n     \"term\": {\n       \"type\": \"FRANCHISE\",\n       \"value\": 10000,\n       \"unit\": \"MONETARYAMOUNT\"\n     },\n     \"price\": {\n       \"basePrice\": 2.0,\n       \"tax\": 0,\n       \"totalPrice\": 7.42,\n       \"termPrice\": 0,\n       \"charges\": [\n         {\n           \"type\": \"_termPrice\",\n           \"amount\": 1.2\n         },\n         {\n           \"type\": \"totalAmount\",\n           \"amount\": 7.42\n         }\n       ]\n     }\n   },\n   {\n     \"code\": \"DP\",\n     \"name\": \"Daños Parciales\",\n     \"description\": \"También cubrimos tu auto ante daños parciales por un accidente, robo y/o incendio\",\n     \"category\": \"COVERAGE\",\n     \"term\": {\n       \"type\": \"FRANCHISE\",\n       \"value\": 15000,\n       \"unit\": \"MONETARYAMOUNT\"\n     },\n     \"price\": {\n       \"basePrice\": 2.0,\n       \"tax\": 0,\n       \"totalPrice\": 10.3,\n       \"termPrice\": 0,\n       \"charges\": [\n         {\n           \"type\": \"_termPrice\",\n           \"amount\": 3.5\n         },\n         {\n           \"type\": \"totalAmount\",\n           \"amount\": 10.3\n         }\n       ]\n     }\n   },\n   {\n     \"code\": \"GRANIZO\",\n     \"name\": \"Granizo\",\n     \"description\": \"Nos ocupamos de los bollos que el granizo deje en tu auto.\",\n     \"category\": \"COVERAGE\",\n     \"term\": {\n       \"type\": \"LIMIT\",\n       \"value\": 10,\n       \"unit\": \"USAGE\"\n     },\n     \"price\": {\n       \"basePrice\": 2.0,\n       \"tax\": 0,\n       \"totalPrice\": 6.3,\n       \"termPrice\": 0,\n       \"charges\": [\n         {\n           \"type\": \"_termPrice\",\n           \"amount\": 1\n         },\n         {\n           \"type\": \"totalAmount\",\n           \"amount\": 6.3\n         }\n       ]\n     }\n   }\n ],\n \"firstCollection\": {\n   \"receptionDate\": \"12/03/2018\",\n   \"effectiveDate\": \"12/03/2018\",\n   \"amount\": 10,\n   \"paymentMethod\": \"MP\",\n   \"externalTransactionId\": \"abc\"\n }\n}"
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "b5109cd5-429e-4340-8fb9-820bcaedc640",
+              "type": "text/javascript",
+              "exec": [
+                "//TESTS;",
+                "    // Check Status 200",
+                "        pm.test(\"Status code is 201\", function () {",
+                "            pm.response.to.have.status(201);",
+                "        });",
+                "",
+                "        ",
+                "        var jsonData = JSON.parse(responseBody);",
+                "",
+                "    // Display the response:",
+                "        pm.test(\"Policy: \" + jsonData.policyNumber, true);",
+                "",
+                "    // Display the EndTime:",
+                "        pm.test(\"End Time :  \" +  new Date().getTime(), true);        ",
+                "",
+                ""
+              ],
+              "_lastExecutionId": "0eab499d-22f4-4622-b1ba-5cabe295b486"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "2c5ff6b6-19e6-4e1b-90e5-a917d71c6af7",
+              "type": "text/javascript",
+              "exec": [
+                "    // Display the response:        ",
+                "            pm.test(\"Start Time : \" +  new Date().getTime() , true);                ",
+                "",
+                ""
+              ],
+              "_lastExecutionId": "797ffeb0-8079-402b-942d-91c38f153ccc"
+            }
+          }
+        ]
+      }
+    ],
+    "event": [],
+    "variable": [],
+    "info": {
+      "id": "a7c59c90-2ba6-70ec-226c-79c2e2b6ad46",
+      "name": "B_API SF integration",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    }
+  },
+  "environment": {
+    "_": {
+      "postman_variable_scope": "environment",
+      "postman_exported_at": "2018-05-15T15:40:24.913Z",
+      "postman_exported_using": "Postman/5.5.3"
+    },
+    "id": "445d480b-ca97-3623-ff9d-85dce1958795",
+    "name": "EnvironmentAPIunigo",
+    "values": [
+      {
+        "type": "any",
+        "value": "c92854b1-00db-4163-976a-0a84151237b8",
+        "key": "idOffering"
+      },
+      {
+        "type": "any",
+        "value": 447,
+        "key": "randomNum"
+      },
+      {
+        "type": "any",
+        "value": 436,
+        "key": "randomNum2"
+      },
+      {
+        "type": "any",
+        "value": "99768416",
+        "key": "idAccount"
+      },
+      {
+        "type": "any",
+        "value": "99453617",
+        "key": "dniAccount"
+      },
+      {
+        "type": "any",
+        "value": "A416768",
+        "key": "licensePlate"
+      },
+      {
+        "type": "any",
+        "value": "1526606489696",
+        "key": "dateClaim"
+      },
+      {
+        "type": "any",
+        "value": "ZEFTIHTNLR.8903acab-50cd-4af4-b701-1292f7a3d2f2",
+        "key": "policyPeriodID"
+      },
+      {
+        "type": "any",
+        "value": "3675030a-e5c9-4f5c-b861-e8873d7636ac",
+        "key": "FinancialTransId"
+      },
+      {
+        "type": "any",
+        "value": "436447436447436447436",
+        "key": "vehicle_id"
+      },
+      {
+        "type": "any",
+        "value": "99436447",
+        "key": "account_id"
+      },
+      {
+        "type": "any",
+        "value": "A896139",
+        "key": "licensePlateDuplic"
+      },
+      {
+        "type": "any",
+        "value": "139896139896139896139",
+        "key": "vinDuplic"
+      },
+      {
+        "type": "any",
+        "value": "99139896",
+        "key": "documentDuplic"
+      },
+      {
+        "type": "any",
+        "value": "TESTAPI896139@fakemail.com",
+        "key": "emailDuplic"
+      },
+      {
+        "type": "any",
+        "value": "https://api.iunigo.com",
+        "key": "url"
+      },
+      {
+        "type": "any",
+        "value": "a0dd77d0-1eda-4fbb-9843-143094b14a15",
+        "key": "policyId"
+      }
+    ]
+  },
+  "globals": {
+    "id": "40fed4c0-69d7-4823-a3e7-ec19b704027f",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 2,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 4,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 2,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 2,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 2,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 4,
+        "pending": 0,
+        "failed": 0
+      },
+      "testScripts": {
+        "total": 2,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 2,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 1668,
+      "started": 1526406462404,
+      "completed": 1526406466104
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 2,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "f0dfa35b-2907-43a5-b281-4899fcca1f94",
+          "httpRequestId": "d0d1fb14-a666-4b02-a942-28d07515c4ff"
+        },
+        "item": {
+          "id": "4cc55bc8-7c68-492c-8855-711d190980a1",
+          "name": "Create Account s/Poliza SF",
+          "request": {
+            "description": {
+              "content": "",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts_vehicles"
+              ],
+              "host": [
+                "{{url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"personalInformation\": {\n    \"name\": \"Juan Martin\",\n    \"surname\": \"Spagnol\",\n    \"document\": \"99{{randomNum2}}{{randomNum}}\",\n    \"birthday\": \"1987-01-01\"\n  },\n  \"contactInformation\": {\n    \"email\": \"TESTAPI{{randomNum}}{{randomNum2}}@fakemail.com\",\n    \"phone\": {\n      \"phoneNumber\": \"1100112233\"\n    },\n    \"address\": {\n      \"streetName\": \"Evergreen\",\n      \"streetNumber\": \"4200\",\n      \"floor\": 0,\n      \"flat\": \"\",\n      \"state\": \"CABA\",\n      \"city\": \"CABA\",\n      \"zipCode\": 1620\n    }\n  },\n  \"vehicleInformation\": {\n    \"carId\": \"320398\",\n    \"licensePlate\": \"A{{randomNum}}{{randomNum2}}\",\n    \"brand\": \"PEUGEOT\",\n    \"model\": \"206\",\n    \"year\": \"2008\",\n    \"version\": \"206 1.6 3 PTAS XS L/04\",\n    \"is0km\": \"false\",\n    \"hasGNC\": \"false\",\n    \"vin\": \"{{randomNum2}}{{randomNum}}{{randomNum2}}{{randomNum}}{{randomNum2}}{{randomNum}}{{randomNum2}}\",\n    \"engineNumber\": \"40000000\"\n  }\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "d3e82cf4-c4ee-4823-a539-19bfa46620e7",
+                "type": "text/javascript",
+                "exec": [
+                  "// Random generator function",
+                  "    //Function for random",
+                  "        function getRandomInt(min, max) {",
+                  "        min = Math.ceil(min);",
+                  "        max = Math.floor(max);",
+                  "        return Math.floor(Math.random() * (max - min)) + min;",
+                  "        }",
+                  "        ",
+                  "    // Generate the random value",
+                  "        var myval = getRandomInt(100,999)",
+                  "        ",
+                  "    // Set the value into  environment variable",
+                  "        pm.environment.set(\"randomNum\",myval)",
+                  "    ",
+                  "    // Generate the random value",
+                  "        var myval = getRandomInt(100,999)",
+                  "        ",
+                  "    // Set the value into  environment variable",
+                  "        pm.environment.set(\"randomNum2\",myval)",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""
+                ],
+                "_lastExecutionId": "36097f2b-f332-40f5-bdac-f4af53f3f733"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "f8fa4445-4d6b-4a81-8cf4-54a598152e5a",
+                "type": "text/javascript",
+                "exec": [
+                  "// Extract Data from Response:",
+                  "    ",
+                  "    // Set DNI value into  environment variable   ",
+                  "        var jsonData = JSON.parse(responseBody);",
+                  "        pm.environment.set(\"account_id\", jsonData.account_id);",
+                  "    ",
+                  "    ",
+                  "    // Set Policy ID value into  environment variable   ",
+                  "        var jsonData = JSON.parse(responseBody);",
+                  "        pm.environment.set(\"vehicle_id\", jsonData.vehicle_id);",
+                  "",
+                  "",
+                  "        "
+                ],
+                "_lastExecutionId": "b30e05fb-6714-4057-a056-6816cad00597"
+              }
+            }
+          ]
+        },
+        "request": {
+          "description": {
+            "content": "",
+            "type": "text/plain"
+          },
+          "url": {
+            "protocol": "https",
+            "path": [
+              "accounts_vehicles"
+            ],
+            "host": [
+              "api",
+              "iunigo",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.1.3"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            },
+            {
+              "key": "Host",
+              "value": "api.iunigo.com"
+            },
+            {
+              "key": "accept-encoding",
+              "value": "gzip, deflate"
+            },
+            {
+              "key": "content-length",
+              "value": 765
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"personalInformation\": {\n    \"name\": \"Juan Martin\",\n    \"surname\": \"Spagnol\",\n    \"document\": \"99436447\",\n    \"birthday\": \"1987-01-01\"\n  },\n  \"contactInformation\": {\n    \"email\": \"TESTAPI447436@fakemail.com\",\n    \"phone\": {\n      \"phoneNumber\": \"1100112233\"\n    },\n    \"address\": {\n      \"streetName\": \"Evergreen\",\n      \"streetNumber\": \"4200\",\n      \"floor\": 0,\n      \"flat\": \"\",\n      \"state\": \"CABA\",\n      \"city\": \"CABA\",\n      \"zipCode\": 1620\n    }\n  },\n  \"vehicleInformation\": {\n    \"carId\": \"320398\",\n    \"licensePlate\": \"A447436\",\n    \"brand\": \"PEUGEOT\",\n    \"model\": \"206\",\n    \"year\": \"2008\",\n    \"version\": \"206 1.6 3 PTAS XS L/04\",\n    \"is0km\": \"false\",\n    \"hasGNC\": \"false\",\n    \"vin\": \"436447436447436447436\",\n    \"engineNumber\": \"40000000\"\n  }\n}"
+          }
+        },
+        "response": {
+          "id": "502b819b-a3e4-4fe9-93d9-a6c7d6cb0d2b",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Tue, 15 May 2018 17:47:44 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "193"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "X-Application-Context",
+              "value": "application:prod"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              97,
+              99,
+              99,
+              111,
+              117,
+              110,
+              116,
+              95,
+              105,
+              100,
+              34,
+              58,
+              34,
+              57,
+              57,
+              52,
+              51,
+              54,
+              52,
+              52,
+              55,
+              34,
+              44,
+              34,
+              118,
+              101,
+              104,
+              105,
+              99,
+              108,
+              101,
+              95,
+              105,
+              100,
+              34,
+              58,
+              34,
+              52,
+              51,
+              54,
+              52,
+              52,
+              55,
+              52,
+              51,
+              54,
+              52,
+              52,
+              55,
+              52,
+              51,
+              54,
+              52,
+              52,
+              55,
+              52,
+              51,
+              54,
+              34,
+              44,
+              34,
+              99,
+              114,
+              101,
+              100,
+              101,
+              110,
+              116,
+              105,
+              97,
+              108,
+              34,
+              58,
+              123,
+              34,
+              116,
+              111,
+              107,
+              101,
+              110,
+              34,
+              58,
+              34,
+              101,
+              121,
+              74,
+              104,
+              98,
+              71,
+              99,
+              105,
+              79,
+              105,
+              74,
+              73,
+              85,
+              122,
+              73,
+              49,
+              78,
+              105,
+              73,
+              115,
+              73,
+              110,
+              82,
+              53,
+              99,
+              67,
+              73,
+              54,
+              73,
+              107,
+              112,
+              88,
+              86,
+              67,
+              74,
+              57,
+              46,
+              101,
+              121,
+              74,
+              122,
+              100,
+              87,
+              73,
+              105,
+              79,
+              105,
+              73,
+              53,
+              79,
+              84,
+              81,
+              122,
+              78,
+              106,
+              81,
+              48,
+              78,
+              121,
+              74,
+              57,
+              46,
+              55,
+              88,
+              50,
+              117,
+              49,
+              117,
+              51,
+              95,
+              80,
+              98,
+              69,
+              116,
+              87,
+              118,
+              77,
+              55,
+              74,
+              107,
+              99,
+              54,
+              122,
+              117,
+              100,
+              116,
+              75,
+              53,
+              74,
+              69,
+              115,
+              117,
+              109,
+              85,
+              97,
+              68,
+              51,
+              51,
+              45,
+              102,
+              45,
+              66,
+              118,
+              79,
+              107,
+              34,
+              125,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 2009,
+          "responseSize": 193
+        },
+        "id": "4cc55bc8-7c68-492c-8855-711d190980a1"
+      },
+      {
+        "cursor": {
+          "ref": "9f60d518-bed2-4ef9-8acd-481d7ba06c1d",
+          "length": 2,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "57b61b4a-406b-4947-a47f-2db00386991c"
+        },
+        "item": {
+          "id": "3e34b936-ab4e-4bb4-a9f3-802527169375",
+          "name": "Create Poliza con Account SF",
+          "request": {
+            "description": {
+              "content": "",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "policies"
+              ],
+              "host": [
+                "{{url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\":\"{{account_id}}\",\n\n  \"vehicleId\":\"{{vehicle_id}}\",\n\n \"packageId\": \"P1\",\n \"products\": [\n   {\n     \"code\": \"RCC\",\n     \"name\": \"Responsabilidad Civil\",\n     \"description\": \"Cobertura frente a daños físicos y materiales ocasionados a otras personas en un accidente de tránsito\",\n     \"category\": \"COVERAGE\",\n     \"term\": {\n       \"type\": \"FRANCHISE\",\n       \"value\": 10000,\n       \"unit\": \"MONETARYAMOUNT\"\n     },\n     \"price\": {\n       \"basePrice\": 2.0,\n       \"tax\": 0,\n       \"totalPrice\": 7.42,\n       \"termPrice\": 0,\n       \"charges\": [\n         {\n           \"type\": \"_termPrice\",\n           \"amount\": 1.2\n         },\n         {\n           \"type\": \"totalAmount\",\n           \"amount\": 7.42\n         }\n       ]\n     }\n   },\n   {\n     \"code\": \"DP\",\n     \"name\": \"Daños Parciales\",\n     \"description\": \"También cubrimos tu auto ante daños parciales por un accidente, robo y/o incendio\",\n     \"category\": \"COVERAGE\",\n     \"term\": {\n       \"type\": \"FRANCHISE\",\n       \"value\": 15000,\n       \"unit\": \"MONETARYAMOUNT\"\n     },\n     \"price\": {\n       \"basePrice\": 2.0,\n       \"tax\": 0,\n       \"totalPrice\": 10.3,\n       \"termPrice\": 0,\n       \"charges\": [\n         {\n           \"type\": \"_termPrice\",\n           \"amount\": 3.5\n         },\n         {\n           \"type\": \"totalAmount\",\n           \"amount\": 10.3\n         }\n       ]\n     }\n   },\n   {\n     \"code\": \"GRANIZO\",\n     \"name\": \"Granizo\",\n     \"description\": \"Nos ocupamos de los bollos que el granizo deje en tu auto.\",\n     \"category\": \"COVERAGE\",\n     \"term\": {\n       \"type\": \"LIMIT\",\n       \"value\": 10,\n       \"unit\": \"USAGE\"\n     },\n     \"price\": {\n       \"basePrice\": 2.0,\n       \"tax\": 0,\n       \"totalPrice\": 6.3,\n       \"termPrice\": 0,\n       \"charges\": [\n         {\n           \"type\": \"_termPrice\",\n           \"amount\": 1\n         },\n         {\n           \"type\": \"totalAmount\",\n           \"amount\": 6.3\n         }\n       ]\n     }\n   }\n ],\n \"firstCollection\": {\n   \"receptionDate\": \"12/03/2018\",\n   \"effectiveDate\": \"12/03/2018\",\n   \"amount\": 10,\n   \"paymentMethod\": \"MP\",\n   \"externalTransactionId\": \"abc\"\n }\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "b5109cd5-429e-4340-8fb9-820bcaedc640",
+                "type": "text/javascript",
+                "exec": [
+                  "//TESTS;",
+                  "    // Check Status 200",
+                  "        pm.test(\"Status code is 201\", function () {",
+                  "            pm.response.to.have.status(201);",
+                  "        });",
+                  "",
+                  "        ",
+                  "        var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "    // Display the response:",
+                  "        pm.test(\"Policy: \" + jsonData.policyNumber, true);",
+                  "",
+                  "    // Display the EndTime:",
+                  "        pm.test(\"End Time :  \" +  new Date().getTime(), true);        ",
+                  "",
+                  ""
+                ],
+                "_lastExecutionId": "0eab499d-22f4-4622-b1ba-5cabe295b486"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "2c5ff6b6-19e6-4e1b-90e5-a917d71c6af7",
+                "type": "text/javascript",
+                "exec": [
+                  "    // Display the response:        ",
+                  "            pm.test(\"Start Time : \" +  new Date().getTime() , true);                ",
+                  "",
+                  ""
+                ],
+                "_lastExecutionId": "797ffeb0-8079-402b-942d-91c38f153ccc"
+              }
+            }
+          ]
+        },
+        "assertions": [
+          {
+            "assertion": "Start Time : 1526406464650"
+          },
+          {
+            "assertion": "Status code is 201"
+          },
+          {
+            "assertion": "Policy: SAEWZWKJKU"
+          },
+          {
+            "assertion": "End Time :  1526406466055"
+          }
+        ],
+        "request": {
+          "description": {
+            "content": "",
+            "type": "text/plain"
+          },
+          "url": {
+            "protocol": "https",
+            "path": [
+              "policies"
+            ],
+            "host": [
+              "api",
+              "iunigo",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.1.3"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            },
+            {
+              "key": "Host",
+              "value": "api.iunigo.com"
+            },
+            {
+              "key": "accept-encoding",
+              "value": "gzip, deflate"
+            },
+            {
+              "key": "content-length",
+              "value": 2093
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"accountId\":\"99436447\",\n\n  \"vehicleId\":\"436447436447436447436\",\n\n \"packageId\": \"P1\",\n \"products\": [\n   {\n     \"code\": \"RCC\",\n     \"name\": \"Responsabilidad Civil\",\n     \"description\": \"Cobertura frente a daños físicos y materiales ocasionados a otras personas en un accidente de tránsito\",\n     \"category\": \"COVERAGE\",\n     \"term\": {\n       \"type\": \"FRANCHISE\",\n       \"value\": 10000,\n       \"unit\": \"MONETARYAMOUNT\"\n     },\n     \"price\": {\n       \"basePrice\": 2.0,\n       \"tax\": 0,\n       \"totalPrice\": 7.42,\n       \"termPrice\": 0,\n       \"charges\": [\n         {\n           \"type\": \"_termPrice\",\n           \"amount\": 1.2\n         },\n         {\n           \"type\": \"totalAmount\",\n           \"amount\": 7.42\n         }\n       ]\n     }\n   },\n   {\n     \"code\": \"DP\",\n     \"name\": \"Daños Parciales\",\n     \"description\": \"También cubrimos tu auto ante daños parciales por un accidente, robo y/o incendio\",\n     \"category\": \"COVERAGE\",\n     \"term\": {\n       \"type\": \"FRANCHISE\",\n       \"value\": 15000,\n       \"unit\": \"MONETARYAMOUNT\"\n     },\n     \"price\": {\n       \"basePrice\": 2.0,\n       \"tax\": 0,\n       \"totalPrice\": 10.3,\n       \"termPrice\": 0,\n       \"charges\": [\n         {\n           \"type\": \"_termPrice\",\n           \"amount\": 3.5\n         },\n         {\n           \"type\": \"totalAmount\",\n           \"amount\": 10.3\n         }\n       ]\n     }\n   },\n   {\n     \"code\": \"GRANIZO\",\n     \"name\": \"Granizo\",\n     \"description\": \"Nos ocupamos de los bollos que el granizo deje en tu auto.\",\n     \"category\": \"COVERAGE\",\n     \"term\": {\n       \"type\": \"LIMIT\",\n       \"value\": 10,\n       \"unit\": \"USAGE\"\n     },\n     \"price\": {\n       \"basePrice\": 2.0,\n       \"tax\": 0,\n       \"totalPrice\": 6.3,\n       \"termPrice\": 0,\n       \"charges\": [\n         {\n           \"type\": \"_termPrice\",\n           \"amount\": 1\n         },\n         {\n           \"type\": \"totalAmount\",\n           \"amount\": 6.3\n         }\n       ]\n     }\n   }\n ],\n \"firstCollection\": {\n   \"receptionDate\": \"12/03/2018\",\n   \"effectiveDate\": \"12/03/2018\",\n   \"amount\": 10,\n   \"paymentMethod\": \"MP\",\n   \"externalTransactionId\": \"abc\"\n }\n}"
+          }
+        },
+        "response": {
+          "id": "b2f30912-072a-4c04-ae05-0ac5d0be773d",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Tue, 15 May 2018 17:47:45 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json;charset=UTF-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "73"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "X-Application-Context",
+              "value": "application:prod"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              102,
+              48,
+              99,
+              54,
+              50,
+              100,
+              55,
+              99,
+              45,
+              56,
+              48,
+              53,
+              49,
+              45,
+              52,
+              52,
+              97,
+              100,
+              45,
+              97,
+              56,
+              48,
+              57,
+              45,
+              53,
+              51,
+              54,
+              53,
+              51,
+              100,
+              54,
+              102,
+              48,
+              48,
+              51,
+              97,
+              34,
+              44,
+              34,
+              112,
+              111,
+              108,
+              105,
+              99,
+              121,
+              78,
+              117,
+              109,
+              98,
+              101,
+              114,
+              34,
+              58,
+              34,
+              83,
+              65,
+              69,
+              87,
+              90,
+              87,
+              75,
+              74,
+              75,
+              85,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 1327,
+          "responseSize": 73
+        },
+        "id": "3e34b936-ab4e-4bb4-a9f3-802527169375"
+      }
+    ],
+    "transfers": {
+      "responseTotal": 266
+    },
+    "failures": [],
+    "error": null
+  }
+}
